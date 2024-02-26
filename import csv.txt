@@ -1,0 +1,28 @@
+import csv
+from datetime import datetime
+
+def is_weekend(timestamp):
+    # Convert timestamp to a datetime object
+    date_obj = datetime.fromtimestamp(float(timestamp))
+    # Check if the day is Saturday (5) or Sunday (6)
+    return date_obj.weekday() in [5, 6]
+
+def remove_weekends(input_file, output_file):
+    with open(input_file, 'r', newline='') as infile, \
+            open(output_file, 'w', newline='') as outfile:
+        reader = csv.reader(infile)
+        writer = csv.writer(outfile)
+        
+        # Write the header to the output file
+        header = next(reader)
+        writer.writerow(header)
+        
+        # Filter rows based on weekends
+        for row in reader:
+            if not is_weekend(row[0]):  # Assuming the timestamp is in the first column
+                writer.writerow(row)
+
+# Example usage:
+input_file = 'input.csv'
+output_file = 'output.csv'
+remove_weekends(input_file, output_file)
